@@ -7,7 +7,6 @@ import AppLoading from "expo-app-loading";
 import { Routes } from "./src/routes";
 import { Background } from "./src/components/Background";
 
-
 export default function App() {
   const [fontsLoaded] = useFonts({ Inter_400Regular, Inter_500Medium, Rajdhani_500Medium, Rajdhani_700Bold });
 
