@@ -11,7 +11,7 @@ type Props = {
 export function Guilds({ handleGuildSelect }: Props) {
     const guilds = [
         {
-            id: 1,
+            id: '1',
             name: 'Lendários',
             icon: 'image.png',
             owner: true,
