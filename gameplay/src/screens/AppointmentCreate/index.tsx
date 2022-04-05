@@ -13,12 +13,19 @@ import { TextArea } from "../../components/TextArea";
 import { Button } from "../../components/Button";
 import { ModalView } from "../../components/ModalView";
 import { Guilds } from "../Guilds";
+import uuid from 'react-native-uuid';
 import { GuildProps } from "../../components/Guild";
 
 export function AppointmentCreate() {
     const [category, setCategory] = useState('');
     const [openGuildsModal, setOpenGuildsModal] = useState(false);
     const [guild, setGuild] = useState<GuildProps>({} as GuildProps);
+
+    const [day, setDay] = useState('');
+    const [month, setMonth] = useState('');
+    const [hour, setHour] = useState('');
+    const [minute, setMinute] = useState('');
+    const [description, setDescription] = useState('');
 
     function handleOpenGuilds() {
         setOpenGuildsModal(true);
@@ -56,7 +63,8 @@ export function AppointmentCreate() {
                         <RectButton onPress={handleOpenGuilds}>
                             <View style={styles.select}>
                                 {
-                                    guild.icon ? <GuildIcon /> : <View style={styles.image} />
+                                    guild.icon ? <GuildIcon guildId={guild.id} iconId={guild.icon}/> : 
+                                    <View style={styles.image} />
                                 }
 
                                 <View style={styles.selectBody}>
@@ -76,11 +84,11 @@ export function AppointmentCreate() {
                                 <Text style={[styles.label, { marginBottom: 12 }]}> Dia e mês </Text>
 
                                 <View style={styles.column}>
-                                    <SmallInput maxLength={2} />
+                                    <SmallInput maxLength={2} onChangeText={setDay}/>
 
                                     <Text style={styles.divider}> / </Text>
 
-                                    <SmallInput maxLength={2} />
+                                    <SmallInput maxLength={2} onChangeText={setMonth}/>
                                 </View>
                             </View>
 
@@ -88,11 +96,11 @@ export function AppointmentCreate() {
                                 <Text style={[styles.label, { marginBottom: 12 }]}> Hora e minuto </Text>
 
                                 <View style={styles.column}>
-                                    <SmallInput maxLength={2} />
+                                    <SmallInput maxLength={2} onChangeText={setHour}/>
 
                                     <Text style={styles.divider}> : </Text>
 
-                                    <SmallInput maxLength={2} />
+                                    <SmallInput maxLength={2} onChangeText={setMinute}/>
                                 </View>
                             </View>
                         </View>
@@ -105,6 +113,7 @@ export function AppointmentCreate() {
 
                         <TextArea multiline maxLength={100}
                             numberOfLines={5} autoCorrect={false}
+                            onChangeText={setDescription}
                         />
 
                         <View style={styles.footer}>
