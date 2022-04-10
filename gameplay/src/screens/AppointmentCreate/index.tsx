@@ -13,8 +13,11 @@ import { TextArea } from "../../components/TextArea";
 import { Button } from "../../components/Button";
 import { ModalView } from "../../components/ModalView";
 import { Guilds } from "../Guilds";
+import { useNavigation } from "@react-navigation/native";
 import uuid from 'react-native-uuid';
 import { GuildProps } from "../../components/Guild";
+import { COLLECTION_APPOINTMENTS } from "../../configs/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function AppointmentCreate() {
     const [category, setCategory] = useState('');
@@ -26,6 +29,8 @@ export function AppointmentCreate() {
     const [hour, setHour] = useState('');
     const [minute, setMinute] = useState('');
     const [description, setDescription] = useState('');
+
+    const navigation=useNavigation<any>();
 
     function handleOpenGuilds() {
         setOpenGuildsModal(true);
@@ -42,6 +47,24 @@ export function AppointmentCreate() {
 
     function handleCategorySelect(categoryId: string) {
         setCategory(categoryId);
+    }
+
+    async function handleSave() {
+        const newAppointment ={
+            id: uuid.v4(),
+            guild,
+            category,
+            date: `${day}/${month} às ${hour}:${minute}`,
+            description
+        };
+        const storage = await AsyncStorage.getItem(COLLECTION_APPOINTMENTS);
+        const appointments = storage ? JSON.parse(storage):[];
+
+        await AsyncStorage.setItem( COLLECTION_APPOINTMENTS,
+            JSON.stringify([...appointments,newAppointment])
+        );
+
+        navigation.navigate('Home');
     }
 
     return (
@@ -117,7 +140,7 @@ export function AppointmentCreate() {
                         />
 
                         <View style={styles.footer}>
-                            <Button title="Agendar" />
+                            <Button title="Agendar" onPress={handleSave}/>
                         </View>
                     </View>
                 </Background>

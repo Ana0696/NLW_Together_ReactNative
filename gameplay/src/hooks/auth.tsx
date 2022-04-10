@@ -23,6 +23,7 @@ type AuthContextData = {
     user: User;
     loading:boolean;
     signIn: () => Promise<void>;
+    signOut:()=> Promise<void>;
 }
 
 type AuthProviderProps = {
@@ -47,7 +48,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             setLoading(true);
 
             const authUrl = `${api.defaults.baseURL}/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
-
+            console.log("4")
             const {type, params} = await AuthSession.startAsync({ authUrl }) as AuthorizationResponse;
             if (type === "success" && !params.error){
                 api.defaults.headers.common['Authorization'] = `Bearer ${params.access_token}`;
@@ -72,6 +73,11 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
+    async function signOut() {
+        setUser({} as User);
+        await AsyncStorage.removeItem(COLLECTION_USERS);
+    }
+
     async function loadUserStorageData() {
         const storage = await AsyncStorage.getItem(COLLECTION_USERS);
 
@@ -89,7 +95,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     return (
         <AuthContext.Provider value={{
-            user, loading, signIn
+            user, loading, signIn, signOut
         }}>
             {children}
         </AuthContext.Provider>
@@ -98,7 +104,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
 function useAuth() {
     const context = useContext(AuthContext);
-
     return context;
 }
 
